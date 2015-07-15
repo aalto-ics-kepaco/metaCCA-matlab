@@ -1,10 +1,9 @@
 function p = chi2cdf_my(x,v)
 
-% MATLAB's function
-% It calls 'gamcdf_my' function instead of 'gamcdf'.
-% In 'gamcdf_my', option 'upper' is added to 'gammainc' function;
+% MATLAB's function, which calls 'gamcdf_my' function instead of 'gamcdf'.
+% In 'gamcdf_my', the option 'upper' is added to 'gammainc' function;
 % it specifies the tail of the gamma function 
-% ('lower' is the default one)
+% ('lower' is the default one).
 
 
 %CHI2CDF Chi-square cumulative distribution function.

@@ -1,8 +1,9 @@
 function [C_XX, C_YY, C_XY, sum_N] = pool_cov(varargin)
 
 % This function pools covariance matrices of the same type;
-% 'varargin' argument is a cell array that contains the inputs, where each input is in its own cell
-% There are 4 types of inputs, in order: C_XX, C_YY, C_XY, N
+% 'varargin' argument is a cell array that contains the inputs, where each
+% input is in its own cell.
+% There are 4 types of inputs: C_XX, C_YY, C_XY, N.
 
 % Anna Cichonska
 % anna.cichonska@helsinki.fi

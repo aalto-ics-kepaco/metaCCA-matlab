@@ -1,8 +1,8 @@
 function [C_XX_shr, C_XY_shr, C_YY_shr] = shrinkPSD(R, n)
 
-% This function shrinks the full covariance matrix until it becomes PSD
+% This function shrinks the full covariance matrix until it becomes PSD,
 % and returns building blocks of the resulting shrunken full covariance 
-% matrix: C_XX, C_XY, C_YY
+% matrix: C_XX, C_XY, C_YY.
 
 % Anna Cichonska
 % anna.cichonska@helsinki.fi

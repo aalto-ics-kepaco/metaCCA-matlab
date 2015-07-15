@@ -4,23 +4,21 @@
 % Helsinki Institute for Information Technology HIIT, Department of Computer Science, Aalto University, Finland
 % Institute for Molecular Medicine Finland FIMM, University of Helsinki, Finland
 % anna.cichonska@helsinki.fi
-%
-% This code is for academic purposes only.
-% Commercial use is not allowed.
+
 
 
 % An example of the meta-analysis of 2 studies: 10 traits and 5 SNPs. 
-% Test data will be provided here by September 2015
+% Test data will be provided here.
 % Univariate summary statistics [100 000 SNPs x 10 traits]
 %   S_XY_full_raw_study1 = load();
 %   S_XY_full_raw_study2 = load();
-% Standard errors SE
+% Standard errors SE of regression coefficients
 %   se_study1 = load();
 %   se_study2 = load()
 % Number of individuals N
 %   N1 = 1000;
 %   N2 = 2000;
-% Genotypic correlation matrices estimated e.g. from the 1000Genomes database
+% Genotypic correlation matrices estimated, e.g., from the 1000Genomes database
 % (an example of estimating C_XX based on the data for a subset 
 %  of individuals from the 1000Genomes database will be provided)
 % [5 SNPs x 5 SNPs]

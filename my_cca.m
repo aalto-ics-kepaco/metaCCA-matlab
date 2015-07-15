@@ -2,7 +2,7 @@ function [r, a, b, wilks, chi, df, p_val] = my_cca(C_XX, C_YY, C_XY, N)
 
 % This function performs Canonical Correlation Analysis (CCA) based on three
 % pieces of the full covariance matrix (C_XX, C_YY, C_XY), as well as
-% significance testing of the canonical correlations
+% significance testing of the canonical correlations.
 
 % Anna Cichonska
 % anna.cichonska@helsinki.fi

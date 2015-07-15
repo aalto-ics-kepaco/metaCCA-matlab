@@ -4,17 +4,15 @@
 % Helsinki Institute for Information Technology HIIT, Department of Computer Science, Aalto University, Finland
 % Institute for Molecular Medicine Finland FIMM, University of Helsinki, Finland
 % anna.cichonska@helsinki.fi
-%
-% This code is for academic purposes only.
-% Commercial use is not allowed.
+
 
 
 % An example of the meta-analysis of 2 studies: 10 traits and 5 SNPs. 
-% Test data will be provided here by September 2015
+% Test data will be provided here.
 % Univariate summary statistics [100 000 SNPs x 10 traits]
 %   S_XY_full_raw_study1 = load();
 %   S_XY_full_raw_study2 = load();
-% Standard errors SE
+% Standard errors SE of regression coefficients
 %   se_study1 = load();
 %   se_study2 = load()
 % Number of individuals N
@@ -51,8 +49,9 @@ S_XY_study2 = S_XY_full_study2( 1:5, :);
 full_cov  =  [C_XX, C_XY; C_XY', C_YY];
 
 
-% Shrinkage of the full covariance matrix
-[C_XX_out, C_XY_out, C_YY_out] = shrinkPSD(full_cov, size(C_XX,1));
+% Shrinkage of the full covariance matrix beyond the level guaranteeing its
+% PSD property
+[C_XX_out, C_XY_out, C_YY_out] = shrink_plus(full_cov, size(C_XX,1));
 
 
 % Canonical Correlation Analysis (CCA)
