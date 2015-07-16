@@ -1,8 +1,8 @@
 # metaCCA
-The codes in this repository can be used to perform metaCCA
-(and its variant metaCCA+) - multivariate analysis of a single 
-or multiple genome-wide association studies (GWAS) based 
-on univariate summary statistics.
+The MATLAB codes in this repository can be used to perform metaCCA
+(and its variant metaCCA+) - summary statistics-based analysis of a 
+single or multiple genome-wide association studies that allows 
+multivariate represen- tation of both genotype and phenotype.
 
 
 *metaCCA: Summary statistics-based multivariate meta-analysis 
