@@ -7,7 +7,7 @@ that allows multivariate representation of both genotype and phenotype.
 
 *metaCCA: Summary statistics-based multivariate meta-analysis <br />
 of genome-wide association studies using canonical correlation analysis.*
-
+<br />
 
 15/07/2015 Anna Cichonska, anna.cichonska@helsinki.fi
 
