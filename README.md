@@ -5,9 +5,10 @@ of a single or multiple genome-wide association studies (GWAS) <br />
 that allows multivariate representation of both genotype and phenotype.
 
 
-*metaCCA: Summary statistics-based multivariate meta-analysis <br />
-of genome-wide association studies using canonical correlation analysis.*
+[*metaCCA: Summary statistics-based multivariate meta-analysis <br />
+of genome-wide association studies using canonical correlation analysis.*](http://biorxiv.org/content/early/2015/07/16/022665)
 <br />
+
 
 15/07/2015 Anna Cichonska, anna.cichonska@helsinki.fi
 
