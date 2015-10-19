@@ -7,6 +7,10 @@ function [C_XX, C_YY, C_XY, sum_N] = pool_cov_cell( S_XX, S_YY, S_XY, N )
 % Anna Cichonska
 % anna.cichonska@helsinki.fi
 
+% The software is for academic purposes only.
+% Commercial use is not allowed.
+% The software is provided "as is", without warranty of any kind.
+
 
 nr_s  = length(N);       % number of studies
 

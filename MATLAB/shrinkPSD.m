@@ -7,6 +7,11 @@ function [C_XX_shr, C_XY_shr, C_YY_shr] = shrinkPSD(R, n)
 % Anna Cichonska
 % anna.cichonska@helsinki.fi
 
+% The software is for academic purposes only.
+% Commercial use is not allowed.
+% The software is provided "as is", without warranty of any kind.
+
+
 
 % Eigenvalues of the full covariance matrix
 lambdas = eig(R); 

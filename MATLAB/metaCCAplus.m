@@ -7,6 +7,9 @@ function result = metaCCAplus(varargin)
 % Anna Cichonska
 % anna.cichonska@helsinki.fi
 
+% The software is for academic purposes only.
+% Commercial use is not allowed.
+% The software is provided "as is", without warranty of any kind.
 
 
 
@@ -28,7 +31,7 @@ end
 
 
 for i = 1:M    % M - #studies
-    % Phenotypic correlaton matrix (1st column contains trait ids)
+    % Phenotypic correlation matrix (1st column contains trait ids)
     S_YY_temp       = varargin{1+ 2*M +i};
     % A matrix without trait ids
     S_YY{i}         = cell2mat(S_YY_temp(:, 2:end));
@@ -40,10 +43,55 @@ for i = 1:M    % M - #studies
     
     % Number of individuals
     N{i}            = varargin{1+ 3*M +i};
+    
+    
+    
+    % Summary statistics
+    S_XY_temp = varargin{1+i};
+
+    % Validating if summary statistics are given in the correct format
+    if isstruct(S_XY_temp)~= 1 
+        error( strcat('Summary statistics are not in the correct format; make sure that the header line is given (study ', num2str(i), ').') );
+    end
+
+    % Betas - trait ids
+    trait_ids_betas_temp = S_XY_temp.textdata(1, 4:2:end);
+    for ii = 1:length(trait_ids_betas_temp)
+        trait_ids_betas{i}(ii) = getfield( strsplit(trait_ids_betas_temp{ii},'_'), {1});
+    end
+
+    % SE - trait ids
+    trait_ids_se_temp    = S_XY_temp.textdata(1, 5:2:end);
+    for ii = 1:length(trait_ids_se_temp)
+        trait_ids_se{i}(ii) = getfield( strsplit(trait_ids_se_temp{ii},'_'), {1});
+    end          
+
+    % Validating if trait ids of the corresponding regression coefficients 
+    % and standard errors match
+    if isequal(trait_ids_betas{i}, trait_ids_se{i}) == 0
+        error( strcat('Trait ids of regression coefficients and standard errors do not match (study ', num2str(i), ').') );
+    end
+end
+
+
+% Validating if trait ids in S_XY match between different studies
+if isequal(trait_ids_betas{:}) ~= 1
+   error('Trait ids in summary statistics of different studies do not match.');  
+end
+
+% Validating if trait ids in S_YY match between different studies
+if isequal(trait_id_syy{:}) ~= 1
+   error('Trait ids in phenotypic correlation structures of different studies do not match.');  
+end
+
+% Validating if trait ids in S_YY and S_XY match 
+if isequal(trait_id_syy{1}, trait_ids_betas{1}) ~= 1
+   error('Trait ids in phenotypic correlation structures and summary statistics do not match.');  
 end
 
 
 
+    
 
 
 
@@ -54,22 +102,8 @@ if option == 0
     for i = 1:M
         
         % Summary statistics
-        S_XY_temp = varargin{1+i};
-        
-        % Validating if trait ids are provided as strings
-        if size(S_XY_temp.textdata,2)-3 ~= size(S_XY_temp.data,2)
-            error( strcat('Trait ids in the header line should be given as strings (study ', num2str(i), ').') );
-        end
-        
-        trait_ids_betas{i} = S_XY_temp.textdata(1,4:2:end);
-        trait_ids_se{i}    = S_XY_temp.textdata(1,5:2:end);
-        
-        % Validating if trait ids of the correspondung regression coefficients 
-        % and standard errors match
-        if isequal(trait_ids_betas{i}, trait_ids_se{i}) == 0
-            error( strcat('Trait ids of regression coefficients and standard errors do not match (study ', num2str(i), ').') );
-        end
-        
+        S_XY_temp = varargin{1+i}; 
+          
         SNPid{i}   =  S_XY_temp.textdata(2:end,1);
         allele0{i} =  S_XY_temp.textdata(2:end,2);
         
@@ -82,18 +116,7 @@ if option == 0
     if isequal(SNPid{:}) ~= 1
        error('SNP ids in summary statistics of different studies do not match.');  
     end
-    % Validating if trait ids in S_XY match between different studies
-    if isequal(trait_ids_betas{:}) ~= 1
-       error('Trait ids in summary statistics of different studies do not match.');  
-    end
-    % Validating if trait ids in S_YY match between different studies
-    if isequal(trait_id_syy{:}) ~= 1
-       error('Trait ids in phenotypic correlation structures of different studies do not match.');  
-    end
-    % Validating if trait ids in S_YY and S_XY match 
-    if isequal(trait_id_syy{1}, trait_ids_betas{1}) ~= 1
-       error('Trait ids in phenotypic correlation structures and summary statistics do not match.');  
-    end
+   
     % Validating if allele_0 match between different studies
     if isequal(allele0{:}) ~= 1
        error('Alleles 0 in summary statistics of different studies do not match.');  
@@ -125,13 +148,18 @@ if option == 0
     [~, C_YY, C_XY, N_tot] = pool_cov_cell( repmat({1}, 1, M),  S_YY,  S_XY_norm,  N);
     
     
-    result = cell(size(C_XY,1),3);
-    result(:,1) = SNPid{1};
+    result = cell(size(C_XY,1)+1,3);
+    % header line
+    result{1,1} = 'SNP_id';
+    result{1,2} = 'r_1';
+    result{1,3} = '-log10(p-val)';
+    % SNP_ids
+    result(2:end,1) = SNPid{1};
   
     % Analysing one SNP at a time (against all given traits)
     for i_snp = 1:size(C_XY,1)
        
-        % Bulding a full covariance matrix
+        % Building a full covariance matrix
         full_cov  =  [1, C_XY(i_snp,:); C_XY(i_snp,:)', C_YY];
         
         % Ensuring the PSD property of the full covariance matrix
@@ -140,8 +168,8 @@ if option == 0
         % Canonical Correlation Analysis (CCA)
         % genotype-phenotype association result
         [r, ~, ~, ~, ~, ~, pval] = my_cca(1, C_YY_out, C_XY_out, N_tot); 
-        result{i_snp,2} = r;
-        result{i_snp,3} = -log10(pval);
+        result{i_snp+1,2} = r;
+        result{i_snp+1,3} = -log10(pval);
     end
     
     
@@ -170,20 +198,6 @@ elseif option == 1
     for i = 1:M
         
         S_XY_temp = varargin{1+i};
-        
-        % Validating if trait ids are provided as strings
-        if size(S_XY_temp.textdata,2)-3 ~= size(S_XY_temp.data,2)
-            error( strcat('Trait ids in the header line should be given as strings (study ', num2str(i), ').') );
-        end
-                      
-        trait_ids_betas{i} = S_XY_temp.textdata(1,4:2:end);
-        trait_ids_se{i}    = S_XY_temp.textdata(1,5:2:end);
-        
-        % Validating if trait ids of the correspondung regression coefficients 
-        % and standard errors match
-        if isequal(trait_ids_betas{i}, trait_ids_se{i}) == 0
-            error( strcat('Trait ids of regression coefficients and standard errors do not match (study ', num2str(i), ').') );
-        end
 
         % match SNP id
         h_id        = find( strcmp(selected_SNPid, SNPid{i}) == 1 );
@@ -196,18 +210,6 @@ elseif option == 1
     end
     
     
-    % Validating if trait ids in S_XY match between different studies
-    if isequal(trait_ids_betas{:}) ~= 1
-       error('Trait ids in summary statistics of different studies do not match.');  
-    end
-    % Validating if trait ids in S_YY match between different studies
-    if isequal(trait_id_syy{:}) ~= 1
-       error('Trait ids in phenotypic correlation structures of different studies do not match.');  
-    end
-    % Validating if trait ids in S_YY and S_XY match 
-    if isequal(trait_id_syy{1}, trait_ids_betas{1}) ~= 1
-       error('Trait ids in phenotypic correlation structures and summary statistics do not match.');  
-    end
     % Validating if allele_0 match between different studies
     if isequal(allele0{:}) ~= 1
        error('Alleles 0 in summary statistics of different studies do not match.');  
@@ -236,10 +238,15 @@ elseif option == 1
     [~, C_YY, C_XY, N_tot] = pool_cov_cell( repmat({1}, 1, M),  S_YY,  S_XY_norm,  N);
     
     result = cell(1,3);
-    result{1,1} = selected_SNPid;
+    % header line
+    result{1,1} = 'SNP_id';
+    result{1,2} = 'r_1';
+    result{1,3} = '-log10(p-val)';
+    % SNP_id
+    result{2,1} = selected_SNPid;
     
     
-    % Bulding a full covariance matrix
+    % Building a full covariance matrix
     full_cov  =  [1, C_XY; C_XY', C_YY];
 
     
@@ -250,8 +257,8 @@ elseif option == 1
     % Canonical Correlation Analysis (CCA)
     % genotype-phenotype association result
     [r, ~, ~, ~, ~, ~, pval] = my_cca(1, C_YY_out, C_XY_out, N_tot); 
-    result{1,2} = r;
-    result{1,3} = -log10(pval);
+    result{2,2} = r;
+    result{2,3} = -log10(pval);
     
     
     
@@ -305,26 +312,11 @@ elseif option == 2
     
     
    
-    % Summary statistics and genotypic correlation structures correspinding to given SNPs
+    % Summary statistics and genotypic correlation structures corresponding to given SNPs
     for i = 1:M
         
         S_XY_temp = varargin{1+i};
-        
-        % Validating if trait ids are provided as strings
-        if size(S_XY_temp.textdata,2)-3 ~= size(S_XY_temp.data,2)
-            error( strcat('Trait ids in the header line should be given as strings (study ', num2str(i), ').') );
-        end
-
-        trait_ids_betas{i} = S_XY_temp.textdata(1,4:2:end);
-        trait_ids_se{i}    = S_XY_temp.textdata(1,5:2:end);
-        
-        % Validating if trait ids of the correspondung regression coefficients 
-        % and standard errors match
-        if isequal(trait_ids_betas{i}, trait_ids_se{i}) == 0
-            error( strcat('Trait ids of regression coefficients and standard errors do not match (study ', num2str(i), ').') );
-        end
-        
-          
+         
         % match SNP ids
         h_id = find(ismember(SNPid{i}, selected_SNPid));
         if length(h_id) > length(selected_SNPid)
@@ -341,18 +333,6 @@ elseif option == 2
     end
     
     
-     % Validating if trait ids in S_XY match between different studies
-    if isequal(trait_ids_betas{:}) ~= 1
-       error('Trait ids in summary statistics of different studies do not match.');  
-    end
-    % Validating if trait ids in S_YY match between different studies
-    if isequal(trait_id_syy{:}) ~= 1
-       error('Trait ids in phenotypic correlation structures of different studies do not match.');  
-    end
-    % Validating if trait ids in S_YY and S_XY match 
-    if isequal(trait_id_syy{1}, trait_ids_betas{1}) ~= 1
-       error('Trait ids in phenotypic correlation structures and summary statistics do not match.');  
-    end
     % Validating if allele_0 match between different studies
     if isequal(allele0{:}) ~= 1
        error('Alleles 0 in summary statistics of different studies do not match.');  
@@ -382,10 +362,16 @@ elseif option == 2
     [C_XX, C_YY, C_XY, N_tot] = pool_cov_cell( S_XX,  S_YY,  S_XY_norm,  N);
     
    
-    result{1,1} = selected_SNPid;
+    % header line
+    result{1,1} = 'SNP_id';
+    result{1,2} = 'r_1';
+    result{1,3} = '-log10(p-val)';
+    % SNP_id
+    result{2,1} = selected_SNPid;
     
     
-    % Bulding a full covariance matrix
+    
+    % Building a full covariance matrix
     full_cov  =  [C_XX, C_XY; C_XY', C_YY];
 
     
@@ -396,7 +382,7 @@ elseif option == 2
     % Canonical Correlation Analysis (CCA)
     % genotype-phenotype association result
     [r, ~, ~, ~, ~, ~, pval] = my_cca(C_XX_out, C_YY_out, C_XY_out, N_tot); 
-    result{1,2} = r(1);
-    result{1,3} = -log10(pval(1));
+    result{2,2} = r(1);
+    result{2,3} = -log10(pval(1));
    
 end

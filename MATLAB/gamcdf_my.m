@@ -1,7 +1,7 @@
 function [p,plo,pup] = gamcdf_my(x,a,b,pcov,alpha)
 
-% MATLAB's function; option 'upper' is added to 'gammainc' function - 
-% it specifies the tail of the gamma function 
+% MATLAB's function; option 'upper' is added to 'gammainc' function 
+% - it specifies the tail of the gamma function 
 % ('lower' is the default one).
 
 

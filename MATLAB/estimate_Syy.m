@@ -1,25 +1,38 @@
-function S_YY = estimate_Syy(S_XY, N, ind)
+function S_YY = estimate_Syy(S_XY)
 
-% This function 
-% 1) normalizes regression coefficients ('normalize_Sxy') if the univariate 
-%    analsysis has been performed on non-standardised data;
-% 2) uses Pearson correlation to compute phenotypic correlation matrix S_YY
-%    based on univariate summary statistics S_XY.
+% This function uses Pearson correlation to compute phenotypic 
+% correlation matrix S_YY based on univariate summary statistics S_XY.
+
 
 % Anna Cichonska
 % anna.cichonska@helsinki.fi
 
+% The software is for academic purposes only.
+% Commercial use is not allowed.
+% The software is provided "as is", without warranty of any kind.
 
 
-% Validating if trait ids are provided as strings
-if size(S_XY.textdata,2)-3 ~= size(S_XY.data,2)
-    error('Trait ids in the header line should be given as strings.');
+
+% Validating if the file format is correct
+if isstruct(S_XY)~= 1 
+    error('Input data are not in the correct format; make sure that the header line is given.');
 end
 
-trait_ids_betas = S_XY.textdata(1,4:2:end);
-trait_ids_se    = S_XY.textdata(1,5:2:end);
 
-% Validating if trait ids of the correspondung regression coefficients 
+% Betas - trait ids
+trait_ids_betas_temp = S_XY.textdata(1, 4:2:end);
+for i = 1:length(trait_ids_betas_temp)
+    trait_ids_betas(i) = getfield( strsplit(trait_ids_betas_temp{i},'_'), {1});
+end
+
+% SE - trait ids
+trait_ids_se_temp    = S_XY.textdata(1, 5:2:end);
+for i = 1:length(trait_ids_se_temp)
+    trait_ids_se(i) = getfield( strsplit(trait_ids_se_temp{i},'_'), {1});
+end
+
+
+% Validating if trait ids of the corresponding regression coefficients 
 % and standard errors match
 if isequal(trait_ids_betas, trait_ids_se) == 0
     error('Trait ids of regression coefficients and standard errors do not match');
@@ -34,18 +47,7 @@ end
 
 
 Betas = S_XY.data(:, 1:2:end);
-SE    = S_XY.data(:, 2:2:end);
 
-
-if ind == 0
-    S_XY_norm = normalize_Sxy(Betas, SE, N);
-elseif ind == 1
-    S_XY_norm = Betas;
-else
-    error('Wrong indicator of the data type. Please select >>0<< or >>1<<. ')
-end
-
-
-S_YY = corr(S_XY_norm);
+S_YY = corr(Betas);
 
 S_YY = [trait_ids_betas', num2cell(S_YY)];
