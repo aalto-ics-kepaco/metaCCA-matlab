@@ -14,6 +14,4 @@ of genome-wide association studies using canonical correlation analysis.*](http:
 
 15/07/2015 Anna Cichonska, anna.cichonska@helsinki.fi
 
-Commercial use is not allowed
-
 R implementation coming soon.
