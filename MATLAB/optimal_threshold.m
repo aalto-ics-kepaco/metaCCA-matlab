@@ -6,9 +6,6 @@ function opt_threshold = optimal_threshold(d_full,R,n,i)
 % Anna Cichonska
 % anna.cichonska@helsinki.fi
 
-% The software is for academic purposes only.
-% Commercial use is not allowed.
-% The software is provided "as is", without warranty of any kind.
 
 
 

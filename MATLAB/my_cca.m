@@ -7,10 +7,6 @@ function [r, a, b, wilks, chi, df, p_val] = my_cca(C_XX, C_YY, C_XY, N)
 % Anna Cichonska
 % anna.cichonska@helsinki.fi
 
-% The software is for academic purposes only.
-% Commercial use is not allowed.
-% The software is provided "as is", without warranty of any kind.
-
 
 
 K = C_XX^(-0.5) * C_XY * C_YY^(-0.5);

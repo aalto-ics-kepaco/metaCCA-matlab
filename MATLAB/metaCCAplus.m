@@ -7,10 +7,6 @@ function result = metaCCAplus(varargin)
 % Anna Cichonska
 % anna.cichonska@helsinki.fi
 
-% The software is for academic purposes only.
-% Commercial use is not allowed.
-% The software is provided "as is", without warranty of any kind.
-
 
 
 nr_in  = nargin;            % number of inputs
