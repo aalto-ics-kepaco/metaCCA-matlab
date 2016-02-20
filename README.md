@@ -14,4 +14,4 @@ of genome-wide association studies using canonical correlation analysis.*](http:
 
 15/07/2015 Anna Cichonska, anna.cichonska@helsinki.fi
 
-R implementation coming soon.
+R implementation: http://bioconductor.org/packages/metaCCA/
