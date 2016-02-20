@@ -8,7 +8,8 @@ example.m demonstrates the usage of metaCCA. Test files are provided.
 
 Please cite the following paper when using the software: <br />
 [*metaCCA: Summary statistics-based multivariate meta-analysis <br />
-of genome-wide association studies using canonical correlation analysis.*](http://biorxiv.org/content/early/2015/07/16/022665)
+of genome-wide association studies using canonical correlation analysis.*](http://bioinformatics.oxfordjournals.org/cgi/content/abstract/btw052?
+ijkey=PMqrnW1zms7Jev9&keytype=ref)
 <br />
 
 
